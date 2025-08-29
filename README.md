@@ -45,6 +45,16 @@ install packages and avoid conficting package requirements; otherwise, to run `p
 if you are encountering issues, you can instead use `failsafe_requirements.txt`, which contains specific versions 
 of packages tested to work with this codebase.] 
 
+## Troubleshooting on apple silicone
+Running `pip install -r requirements.txt` probably won’t work because there are no versions specified (except sktime==0.4.1) and conda or pip can’t solve this alone.  
+If you use `pip install -r failsafe_requirements.txt` on Apple silicone, this likely doesn’t work because the pandas version is too old and not available for M1/M2.
+You can use `pip install -r failsafe_requirements_apple_silicone.txt`, which has been tested.
+Probably, installing `sktime==0.4.1` will still cause some problems. Below you can find how to solve them: 
+- `ModuleNotFoundError: No module named 'distutils.msvccompiler'` can be ignored because it is only needed for windows systems
+- `clang: error: unsupported option '-fopenmp'` - Install OpenMP support via Homebrew: `brew install libomp` and further export `SKTIME_NO_OPENMP=1`
+- Use `pip install --no-use-pep517 sktime==0.4.1` to install `sktime==0.4.1`
+
+
 ### Get data from TS Archive
 
 Download dataset files and place them in separate directories, one for regression and one for classification.
