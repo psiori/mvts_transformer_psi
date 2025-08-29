@@ -434,7 +434,7 @@ class SupervisedRunner(BaseRunner):
         self.epoch_metrics['loss'] = epoch_loss
         return self.epoch_metrics
 
-    def evaluate(self, epoch_num=None, keep_all=True):
+    def evaluate(self, epoch_num=None, keep_all=True, results_path = None):
 
         self.model = self.model.eval()
 
@@ -455,8 +455,8 @@ class SupervisedRunner(BaseRunner):
             mean_loss = batch_loss / len(loss)  # mean loss (over samples)
 
             per_batch['targets'].append(targets.cpu().numpy())
-            per_batch['predictions'].append(predictions.cpu().numpy())
-            per_batch['metrics'].append([loss.cpu().numpy()])
+            per_batch['predictions'].append(predictions.detach().numpy())
+            per_batch['metrics'].append([loss.detach().numpy()])
             per_batch['IDs'].append(IDs)
 
             metrics = {"loss": mean_loss}
@@ -489,6 +489,11 @@ class SupervisedRunner(BaseRunner):
 
                 prec, rec, _ = sklearn.metrics.precision_recall_curve(targets, probs[:, 1])
                 self.epoch_metrics['AUPRC'] = sklearn.metrics.auc(rec, prec)
+
+            if results_path is not None:
+                data_for_csv = np.column_stack((predictions, probs, targets))
+                np.savetxt(results_path, data_for_csv, delimiter=',', header='prediction,p(0),p(1),true_class', comments='', fmt='%s')
+
 
         if keep_all:
             return self.epoch_metrics, per_batch

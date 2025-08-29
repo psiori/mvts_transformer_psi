@@ -182,6 +182,8 @@ def main(config):
     loss_module = get_loss_module(config)
 
     if config['test_only'] == 'testset':  # Only evaluate and skip training
+        results_path = os.path.join(config['output_dir'], 'test_results.csv')
+
         dataset_class, collate_fn, runner_class = pipeline_factory(config)
         test_dataset = dataset_class(test_data, test_indices)
 
@@ -193,7 +195,7 @@ def main(config):
                                  collate_fn=lambda x: collate_fn(x, max_len=model.max_len))
         test_evaluator = runner_class(model, test_loader, device, loss_module,
                                             print_interval=config['print_interval'], console=config['console'])
-        aggr_metrics_test, per_batch_test = test_evaluator.evaluate(keep_all=True)
+        aggr_metrics_test, per_batch_test = test_evaluator.evaluate(keep_all=True, results_path=results_path)
         print_str = 'Test Summary: '
         for k, v in aggr_metrics_test.items():
             if v is not None:
