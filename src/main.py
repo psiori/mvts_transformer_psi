@@ -89,7 +89,7 @@ def main(config):
 
     # Note: currently a validation set must exist, either with `val_pattern` or `val_ratio`
     # Using a `val_pattern` means that `val_ratio` == 0 and `test_ratio` == 0
-    if config['val_ratio'] > 0:
+    if config['val_ratio'] > 0 and config['test_only'] != 'testset':
         train_indices, val_indices, test_indices = split_dataset(data_indices=my_data.all_IDs,
                                                                  validation_method=validation_method,
                                                                  n_splits=1,
@@ -196,7 +196,8 @@ def main(config):
         aggr_metrics_test, per_batch_test = test_evaluator.evaluate(keep_all=True)
         print_str = 'Test Summary: '
         for k, v in aggr_metrics_test.items():
-            print_str += '{}: {:8f} | '.format(k, v)
+            if v is not None:
+                print_str += '{}: {:8f} | '.format(k, v)
         logger.info(print_str)
         return
     
