@@ -13,6 +13,8 @@ from tabulate import tabulate
 import math
 import logging
 from datetime import datetime
+import pandas as pd
+from sklearn.metrics import roc_curve, auc, confusion_matrix
 
 
 def acc_top_k(predictions, y_true):
@@ -201,6 +203,42 @@ def print_confusion_matrix(ConfMat, label_strings=None, title='Confusion matrix'
     for i, row in enumerate(ConfMat):
         print_mat.append([label_strings[i]] + list(row))
     print(tabulate(print_mat, headers=['True\Pred'] + label_strings, tablefmt='orgtbl'))
+
+def plot_ROC(path):
+    df = pd.read_csv(path)
+
+    fpr, tpr, thresholds = roc_curve(df.true_class, df['p(1)'] )
+    roc_auc = auc(fpr, tpr)
+
+    fig, ax = plt.subplots()
+    ax.plot(fpr, tpr, color='blue', lw=2, label=f'ROC curve (AUC = {roc_auc:.2f})')
+    ax.plot([0, 1], [0, 1], color='red', lw=2, linestyle='--')  #random baseline
+    ax.set_xlim([0.0, 1.0])
+    ax.set_ylim([0.0, 1.0])
+    ax.set_xlabel('False Positive Rate')
+    ax.set_ylabel('True Positive Rate')
+    ax.set_title('Receiver Operating Characteristic (ROC)')
+    ax.legend(loc="lower right")
+    return fig, ax
+
+def print_confusion_matrix_from_data(path, normalize = False):
+    df = pd.read_csv(path)
+    cm = confusion_matrix(df.true_class, df.prediction, normalize=normalize)
+    labels = [0, 1]  # class labels
+
+    # Print header
+    print("Confusion Matrix:")
+    print("          ", end="")
+    for label in labels:
+        print(f"Pred {label} ", end="")
+    print()
+
+    # Print rows
+    for i, row in enumerate(cm):
+        print(f"True {labels[i]} ", end="")
+        for val in row:
+            print(f"{float(val):>8.3} ", end="")  # right-align numbers
+        print()
 
 
 class Analyzer(object):
