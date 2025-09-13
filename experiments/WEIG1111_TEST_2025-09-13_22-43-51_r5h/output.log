@@ -1,0 +1,5 @@
+Running:
+/Users/niklas/PycharmProjects/mvts-5/mvts/src/main.py --name WEIG1111_TEST --output_dir /Users/niklas/PycharmProjects/mvts-5/mvts/experiments --test_only testset --load_model /Users/niklas/PycharmProjects/mvts-5/mvts/saved_experiments/finetune_heartbeat_weighted_2/checkpoints/model_best.pth --test_pattern TEST --data_dir /Users/niklas/PycharmProjects/mvts-5/mvts/data/Heartbeat --data_class tsra --task classification --num_layers 1 --num_heads 8 --dim_feedforward 256 --d_model 64
+
+Using device: cpu
+Loading and preprocessing data ...
