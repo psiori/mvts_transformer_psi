@@ -135,6 +135,8 @@ class Options(object):
                                  help='Metric used for defining best epoch')
         self.parser.add_argument('--freeze', action='store_true',
                                  help='If set, freezes all layer parameters except for the output layer. Also removes dropout except before the output layer')
+        self.parser.add_argument('--loss_class_weights', type=float, nargs='+', default=None,)
+
 
         # Model
         self.parser.add_argument('--model', choices={"transformer", "LINEAR"}, default="transformer",

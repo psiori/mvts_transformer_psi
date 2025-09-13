@@ -11,7 +11,11 @@ def get_loss_module(config):
         return MaskedMSELoss(reduction='none')  # outputs loss for each batch element
 
     if task == "classification":
-        return NoFussCrossEntropyLoss(reduction='none')  # outputs loss for each batch sample
+        if config['loss_class_weights'] is not None:
+            weight = torch.tensor(config['loss_class_weights'], dtype=torch.float)
+            return NoFussCrossEntropyLoss(reduction='none', weight=weight)  # outputs loss for each batch sample
+        else:
+            return NoFussCrossEntropyLoss(reduction='none')  # outputs loss for each batch sample
 
     if task == "regression":
         return nn.MSELoss(reduction='none')  # outputs loss for each batch sample
