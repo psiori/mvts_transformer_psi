@@ -18,7 +18,7 @@ import numpy as np
 import sklearn
 
 from utils import utils, analysis
-from models.loss import l2_reg_loss
+from models.loss import l2_reg_loss, NoFussFocalLoss
 from datasets.dataset import ImputationDataset, TransductionDataset, ClassiregressionDataset, collate_unsuperv, collate_superv
 
 
@@ -381,8 +381,8 @@ class SupervisedRunner(BaseRunner):
     def __init__(self, *args, **kwargs):
 
         super(SupervisedRunner, self).__init__(*args, **kwargs)
-
-        if isinstance(args[3], torch.nn.CrossEntropyLoss):
+        self.classification = args
+        if isinstance(args[3], torch.nn.CrossEntropyLoss) or isinstance(args[3], NoFussFocalLoss):
             self.classification = True  # True if classification, False if regression
             self.analyzer = analysis.Analyzer(print_conf_mat=True)
         else:
