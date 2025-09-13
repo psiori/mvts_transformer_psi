@@ -8,6 +8,8 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from tqdm import tqdm
 
+import warnings
+
 regression_datasets = ["AustraliaRainfall",
                        "HouseholdPowerConsumption1",
                        "HouseholdPowerConsumption2",
@@ -71,6 +73,11 @@ def load_from_tsfile_to_dataframe(full_file_path_and_name, return_separate_X_and
     DataFrame
         If not return_separate_X_and_y then a single DataFrame containing all time-series and (if relevant) a column "class_vals" the associated class values.
     """
+    warnings.warn(
+        "Method is not working. Use sktime.utils.load_data.load_from_tsfile_to_dataframe instead ",
+        UserWarning,
+        stacklevel=2
+    )
 
     # Initialize flags and variables used when parsing the file
     metadata_started = False
