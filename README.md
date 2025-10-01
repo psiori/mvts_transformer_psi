@@ -135,6 +135,7 @@ As noted above, please check the paper for the optimal hyperparameter values for
 ## Fine-tune pretrained models
 
 Make sure that network architecture parameters (e.g. `d_model`) used to fine-tune a model match the pretrained model.
+Also make sure to set the `change_output` argument to `True` if the model was pretrained on a different task, which is True in the standard case of pretraining through imputation. .
 
 ### Regression
 ```bash
